@@ -2,11 +2,11 @@ import { prisma } from "../../config/prisma.js";
 import { hashPassword, comparePassword } from "../../utils/hash.js";
 import { generateToken } from "../../utils/jwt.js";
 
-export const register = async (email, password) => {
+export const register = async (email, password, name, lastName) => {
   const hashed = await hashPassword(password);
 
   return prisma.user.create({
-    data: { email, password: hashed },
+    data: { email, password: hashed, name, lastName },
   });
 };
 

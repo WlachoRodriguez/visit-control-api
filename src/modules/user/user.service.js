@@ -21,6 +21,8 @@ export const getUsers = async ({ page, limit, role, search }) => {
         id: true,
         email: true,
         role: true,
+        name: true,
+        lastName: true,
         createdAt: true,
       },
     }),
@@ -46,6 +48,8 @@ export const getUserById = (id) => {
       id: true,
       email: true,
       role: true,
+      name: true,
+      lastName: true,
       createdAt: true,
     },
   });
