@@ -13,16 +13,47 @@ datasource db {
 }
 
 model User {
-  id        String   @id @default(uuid())
-  email     String   @unique
-  password  String
-  name      String
-  lastName  String
-  role      Role     @default(USER)
-  createdAt DateTime @default(now())
+  id         String   @id @default(uuid())
+  email      String   @unique
+  password   String
+  name       String
+  lastName   String
+  role       Role     @default(USER)
+  isActive   Boolean  @default(true)
+  districtId String?
+  district   District? @relation(fields: [districtId], references: [id])
+  createdAt  DateTime @default(now())
 }
 
 enum Role {
   ADMIN
   USER
+  SECRETARY
+  OFFICE
+}
+
+model District {
+  id       String   @id @default(uuid())
+  name     String
+  churches Church[]
+  users    User[]
+}
+
+model Church {
+  id         String   @id @default(uuid())
+  name       String
+  districtId String
+  district   District @relation(fields: [districtId], references: [id])
+  members    Member[]
+}
+
+model Member {
+  id        String @id @default(uuid())
+  name      String
+  lastName  String
+  phone     String
+  address   String
+
+  churchId  String
+  church    Church @relation(fields: [churchId], references: [id])
 }
