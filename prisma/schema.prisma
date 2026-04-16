@@ -23,6 +23,7 @@ model User {
   districtId String?
   district   District? @relation(fields: [districtId], references: [id])
   createdAt  DateTime @default(now())
+  visits Visit[]
 }
 
 enum Role {
@@ -53,7 +54,25 @@ model Member {
   lastName  String
   phone     String
   address   String
-
   churchId  String
   church    Church @relation(fields: [churchId], references: [id])
+  visits    Visit[]
+}
+
+enum VisitSchedule {
+  MORNING
+  AFTERNOON
+  NIGHT
+}
+
+model Visit {
+  id          String   @id @default(uuid())
+  date        DateTime
+  schedule    VisitSchedule
+  type        String
+  comments    String?
+  userId      String
+  user        User     @relation(fields: [userId], references: [id])
+  members     Member[]
+  createdAt   DateTime @default(now())
 }
