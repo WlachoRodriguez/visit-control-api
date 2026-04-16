@@ -1,0 +1,5 @@
+export const VISITSCHEDULE = {
+  MORNING: "MORNING",
+  AFTERNOON: "AFTERNOON",
+  NIGHT: "NIGHT",
+};
