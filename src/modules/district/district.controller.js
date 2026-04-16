@@ -11,7 +11,7 @@ export const create = async (req, res, next) => {
   }
 };
 
-// GET /districts
+// GET /district
 export const getDistricts = async (req, res, next) => {
   try {
     const { search } = req.validated.query;
