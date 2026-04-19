@@ -5,6 +5,7 @@ import userRoutes from "./modules/user/user.route.js";
 import districtRoutes from "./modules/district/district.router.js";
 import churchRoutes from "./modules/church/church.router.js";
 import memberRoutes from "./modules/member/member.router.js";
+import visitRoutes from "./modules/visit/visit.router.js";
 import { errorHandler } from "./middlewares/error.middleware.js";
 
 const app = express();
@@ -17,6 +18,7 @@ app.use("/users", userRoutes);
 app.use("/district", districtRoutes);
 app.use("/church", churchRoutes);
 app.use("/member", memberRoutes);
+app.use("/visit", visitRoutes);
 
 app.use(errorHandler);
 
