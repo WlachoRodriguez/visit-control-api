@@ -3,12 +3,13 @@ import * as userService from "./user.service.js";
 // GET /users
 export const getUsers = async (req, res, next) => {
   try {
-    const { page, limit, role, search } = req.validated.query;
+    const { page, limit, role, isActive, search } = req.validated.query;
 
     const users = await userService.getUsers({
       page,
       limit,
       role,
+      isActive,
       search,
     });
     res.json(users);
@@ -22,7 +23,7 @@ export const getUserById = async (req, res) => {
   const user = await userService.getUserById(req.params.id);
 
   if (!user) {
-    return res.status(404).json({ message: "User not found" });
+    return res.status(404).json({ message: "Usuario no encontrado" });
   }
 
   res.json(user);
@@ -42,7 +43,7 @@ export const updateUser = async (req, res) => {
 export const deleteUser = async (req, res) => {
   try {
     await userService.deleteUser(req.params.id);
-    res.json({ message: "User deleted" });
+    res.json({ message: "Usuario eliminado" });
   } catch (e) {
     next(e);
   }

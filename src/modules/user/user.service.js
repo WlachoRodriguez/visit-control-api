@@ -1,12 +1,20 @@
 import { prisma } from "../../config/prisma.js";
 
 // Ver todos los usuarios
-export const getUsers = async ({ page, limit, role, search }) => {
+export const getUsers = async ({ page, limit, role, isActive, search }) => {
   const where = {
     ...(role && { role }),
-
+    ...(isActive && { isActive }),
     ...(search && {
       email: {
+        contains: search,
+        mode: "insensitive",
+      },
+      name: {
+        contains: search,
+        mode: "insensitive",
+      },
+      lastName: {
         contains: search,
         mode: "insensitive",
       },
