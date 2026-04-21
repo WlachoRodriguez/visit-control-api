@@ -30,7 +30,7 @@ export const getUserById = async (req, res) => {
 };
 
 // PUT /users/:id
-export const updateUser = async (req, res) => {
+export const updateUser = async (req, res, next) => {
   try {
     const user = await userService.updateUser(req.params.id, req.body);
     res.json(user);
@@ -40,7 +40,7 @@ export const updateUser = async (req, res) => {
 };
 
 // DELETE /users/:id
-export const deleteUser = async (req, res) => {
+export const deleteUser = async (req, res, next) => {
   try {
     await userService.deleteUser(req.params.id);
     res.json({ message: "Usuario eliminado" });

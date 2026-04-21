@@ -81,7 +81,15 @@ export const updateUser = async (id, data) => {
 };
 
 // Eliminar un usuario
-export const deleteUser = (id) => {
+export const deleteUser = async (id) => {
+  const visits = await prisma.visit.count({
+    where: { userId: id },
+  });
+
+  if (visits > 0) {
+    throw new Error("No se puede eliminar un usuario con visitas asociadas");
+  }
+
   return prisma.user.delete({
     where: { id },
   });
