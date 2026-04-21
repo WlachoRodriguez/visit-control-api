@@ -31,6 +31,8 @@ export const getUsers = async ({ page, limit, role, isActive, search }) => {
         role: true,
         name: true,
         lastName: true,
+        isActive: true,
+        district: true,
         createdAt: true,
       },
     }),
@@ -58,6 +60,8 @@ export const getUserById = (id) => {
       role: true,
       name: true,
       lastName: true,
+      isActive: true,
+      district: true,
       createdAt: true,
     },
   });
