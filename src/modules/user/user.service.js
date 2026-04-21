@@ -25,6 +25,7 @@ export const getUsers = async ({ page, limit, role, isActive, search }) => {
       where,
       skip: (page - 1) * limit,
       take: limit,
+      orderBy: { name: "asc" },
       select: {
         id: true,
         email: true,
