@@ -60,7 +60,23 @@ export const updateMember = async (id, data) => {
 };
 
 // Eliminar un miembro
-export const deleteMember = (id) => {
+export const deleteMember = async (id) => {
+  const visits = await prisma.visit.count({
+    where: {
+      members: {
+        some: {
+          id: id,
+        },
+      },
+    },
+  });
+
+  if (visits > 0) {
+    throw new Error(
+      "No puedes eliminar este miembro porque tiene visitas asociadas",
+    );
+  }
+
   return prisma.member.delete({
     where: { id },
   });

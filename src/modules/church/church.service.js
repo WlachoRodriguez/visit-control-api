@@ -49,7 +49,15 @@ export const updateChurch = async (id, data) => {
 };
 
 // Eliminar una iglesia
-export const deleteChurch = (id) => {
+export const deleteChurch = async (id) => {
+  const members = await prisma.member.count({
+    where: { churchId: id },
+  });
+
+  if (members > 0) {
+    throw new Error("No se puede eliminar una iglesia con miembros asociados");
+  }
+
   return prisma.church.delete({
     where: { id },
   });

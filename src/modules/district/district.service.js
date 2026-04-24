@@ -50,7 +50,15 @@ export const updateDistrict = async (id, data) => {
 };
 
 // Eliminar un distrito
-export const deleteDistrict = (id) => {
+export const deleteDistrict = async (id) => {
+  const churchs = await prisma.church.count({
+    where: { districtId: id },
+  });
+
+  if (churchs > 0) {
+    throw new Error("No se puede eliminar un distrito con iglesias asociadas");
+  }
+
   return prisma.district.delete({
     where: { id },
   });
