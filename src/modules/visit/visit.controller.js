@@ -23,10 +23,13 @@ export const getVisits = async (req, res, next) => {
   try {
     const { search, date } = req.validated.query;
 
-    const visits = await visitService.getVisits({
-      search,
-      date,
-    });
+    const visits = await visitService.getVisits(
+      {
+        search,
+        date,
+      },
+      req.user.id,
+    );
     res.json(visits);
   } catch (e) {
     next(e);
@@ -35,7 +38,7 @@ export const getVisits = async (req, res, next) => {
 
 // GET /visit/:id
 export const getVisitById = async (req, res) => {
-  const visit = await visitService.getVisitById(req.params.id);
+  const visit = await visitService.getVisitById(req.params.id, req.user.id);
 
   if (!visit) {
     return res.status(404).json({ message: "Visita no encontrada" });

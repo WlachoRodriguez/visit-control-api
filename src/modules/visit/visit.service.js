@@ -24,8 +24,9 @@ export const create = async (
 };
 
 // Ver todos los visitas
-export const getVisits = async ({ search, date }) => {
+export const getVisits = async ({ search, date }, userId) => {
   const where = {
+    ...userId,
     ...(search && {
       type: {
         contains: search,
@@ -53,14 +54,20 @@ export const getVisits = async ({ search, date }) => {
           lastName: true,
         },
       },
+      user: {
+        select: {
+          id: true,
+          name: true,
+        },
+      },
     },
   });
 };
 
 // Ver visita por Id
-export const getVisitById = (id) => {
+export const getVisitById = (id, userId) => {
   return prisma.visit.findUnique({
-    where: { id },
+    where: { id, userId },
     select: {
       id: true,
       date: true,
@@ -72,6 +79,12 @@ export const getVisitById = (id) => {
           id: true,
           name: true,
           lastName: true,
+        },
+      },
+      user: {
+        select: {
+          id: true,
+          name: true,
         },
       },
     },

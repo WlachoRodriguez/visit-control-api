@@ -10,9 +10,6 @@ import {
 
 const router = Router();
 
-// Permiso de ADMIN
-router.use(authMiddleware, roleMiddleware("ADMIN"));
-
 router.post("/", validate(churchSchema), controller.create);
 router.get("/", validate(churchQuerySchema, "query"), controller.getChurchs);
 router.get("/:id", controller.getChurchById);
