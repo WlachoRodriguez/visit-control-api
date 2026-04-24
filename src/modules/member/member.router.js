@@ -13,5 +13,6 @@ router.get("/", validate(memberQuerySchema, "query"), controller.getMembers);
 router.get("/:id", controller.getMemberById);
 router.put("/:id", validate(memberSchema), controller.updateMember);
 router.delete("/:id", controller.deleteMember);
+router.post("/createMany", controller.createMany);
 
 export default router;

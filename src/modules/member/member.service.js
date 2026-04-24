@@ -81,3 +81,20 @@ export const deleteMember = async (id) => {
     where: { id },
   });
 };
+
+export const createMany = async (members) => {
+  const validMembers = members.filter(
+    (m) => m.name && m.lastName && m.phone && m.address && m.churchId,
+  );
+
+  const result = await prisma.member.createMany({
+    data: validMembers,
+    skipDuplicates: true,
+  });
+
+  return {
+    total: members.length,
+    inserted: result.count,
+    ignored: members.length - result.count,
+  };
+};

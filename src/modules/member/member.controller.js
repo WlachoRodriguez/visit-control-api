@@ -61,3 +61,19 @@ export const deleteMember = async (req, res, next) => {
     next(e);
   }
 };
+
+export const createMany = async (req, res, next) => {
+  try {
+    const members = req.body;
+
+    if (!Array.isArray(members)) {
+      return res.status(400).json({ message: "Debe ser un array" });
+    }
+
+    const result = await memberService.createMany(members);
+
+    res.json(result);
+  } catch (e) {
+    next(e);
+  }
+};
