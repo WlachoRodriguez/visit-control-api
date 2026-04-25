@@ -8,6 +8,7 @@ export const updateUserSchema = z.object({
   lastName: z.string().min(3, "Mínimo 3 caracteres").optional(),
   role: z.enum(Object.values(ROLES)).optional(),
   isActive: z.boolean().optional(),
+  districtId: z.string().uuid("Distrito invalido"),
 });
 
 export const userQuerySchema = z.object({

@@ -22,9 +22,12 @@ export const getMembers = async (req, res, next) => {
   try {
     const { search } = req.validated.query;
 
-    const members = await memberService.getMembers({
-      search,
-    });
+    const members = await memberService.getMembers(
+      {
+        search,
+      },
+      req.user.userId,
+    );
     res.json(members);
   } catch (e) {
     next(e);
@@ -33,10 +36,13 @@ export const getMembers = async (req, res, next) => {
 
 // GET /member/:id
 export const getMemberById = async (req, res) => {
-  const member = await memberService.getMemberById(req.params.id);
+  const member = await memberService.getMemberById(
+    req.params.id,
+    req.user.userId,
+  );
 
   if (!member) {
-    return res.status(404).json({ message: "Iglesia no encontrada" });
+    return res.status(404).json({ message: "Miembro no encontrado" });
   }
 
   res.json(member);

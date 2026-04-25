@@ -9,11 +9,20 @@ export const register = async (
   lastName,
   role,
   isActive,
+  districtId,
 ) => {
   const hashed = await hashPassword(password);
 
   return prisma.user.create({
-    data: { email, password: hashed, name, lastName, role, isActive },
+    data: {
+      email,
+      password: hashed,
+      name,
+      lastName,
+      role,
+      isActive,
+      districtId,
+    },
   });
 };
 
@@ -42,6 +51,7 @@ export const login = async (email, password) => {
       lastName: user.lastName,
       role: user.role,
       isActive: user.isActive,
+      districtId: user.districtId,
     },
   };
 };

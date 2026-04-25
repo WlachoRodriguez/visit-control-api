@@ -1,5 +1,6 @@
 import { Router } from "express";
 import * as controller from "./member.controller.js";
+import { authMiddleware } from "../../middlewares/auth.middleware.js";
 import { validate } from "../../middlewares/validate.middleware.js";
 import {
   memberSchema,
@@ -7,6 +8,7 @@ import {
 } from "../../validations/member.schema.js";
 
 const router = Router();
+router.use(authMiddleware);
 
 router.post("/", validate(memberSchema), controller.create);
 router.get("/", validate(memberQuerySchema, "query"), controller.getMembers);

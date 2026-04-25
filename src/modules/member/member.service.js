@@ -8,8 +8,19 @@ export const create = async (name, lastName, phone, address, churchId) => {
 };
 
 // Ver todos los miembros
-export const getMembers = async ({ search }) => {
+export const getMembers = async ({ search }, userId) => {
+  const user = await prisma.user.findUnique({
+    where: { id: userId },
+  });
+
+  if (!user?.districtId) {
+    throw new Error("Usuario sin districtId");
+  }
+
   const where = {
+    church: {
+      districtId: user.districtId,
+    },
     ...(search && {
       name: {
         contains: search,
@@ -42,9 +53,17 @@ export const getMembers = async ({ search }) => {
 };
 
 // Ver miembro por Id
-export const getMemberById = (id) => {
+export const getMemberById = async (id, userId) => {
+  const user = await prisma.user.findUnique({
+    where: { id: userId },
+  });
+
+  if (!user?.districtId) {
+    throw new Error("Usuario sin districtId");
+  }
+
   return prisma.member.findUnique({
-    where: { id },
+    where: { id, church: { districtId: user.districtId } },
     include: {
       church: true,
     },

@@ -8,6 +8,7 @@ export const registerSchema = z.object({
   lastName: z.string().min(3, "Apellido requerido (mínimo 3 letras)"),
   role: z.enum(Object.values(ROLES)),
   isActive: z.boolean(),
+  districtId: z.string().uuid("Distrito invalido"),
 });
 
 export const loginSchema = z.object({
