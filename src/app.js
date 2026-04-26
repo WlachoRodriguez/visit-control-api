@@ -6,6 +6,7 @@ import districtRoutes from "./modules/district/district.router.js";
 import churchRoutes from "./modules/church/church.router.js";
 import memberRoutes from "./modules/member/member.router.js";
 import visitRoutes from "./modules/visit/visit.router.js";
+import dashboardRoutes from "./modules/dashboard/dashboard.routes.js";
 import { errorHandler } from "./middlewares/error.middleware.js";
 
 const app = express();
@@ -19,6 +20,7 @@ app.use("/district", districtRoutes);
 app.use("/church", churchRoutes);
 app.use("/member", memberRoutes);
 app.use("/visit", visitRoutes);
+app.use("/dashboard", dashboardRoutes);
 
 app.use(errorHandler);
 

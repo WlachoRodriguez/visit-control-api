@@ -28,7 +28,7 @@ export const getVisits = async (req, res, next) => {
         search,
         date,
       },
-      req.user.id,
+      req.user.userId,
     );
     res.json(visits);
   } catch (e) {
@@ -38,7 +38,7 @@ export const getVisits = async (req, res, next) => {
 
 // GET /visit/:id
 export const getVisitById = async (req, res) => {
-  const visit = await visitService.getVisitById(req.params.id, req.user.id);
+  const visit = await visitService.getVisitById(req.params.id, req.user.userId);
 
   if (!visit) {
     return res.status(404).json({ message: "Visita no encontrada" });
