@@ -26,7 +26,7 @@ export const create = async (
 // Ver todos los visitas
 export const getVisits = async ({ search, date }, userId) => {
   const where = {
-    ...userId,
+    ...(userId && { userId }),
     ...(search && {
       type: {
         contains: search,
