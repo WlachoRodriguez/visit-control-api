@@ -5,10 +5,7 @@ export const getDataFromGraphs = async (
   reqUser,
 ) => {
   const isAdmin = reqUser.role === "ADMIN";
-  console.log("userId", userId);
-
-  const filterUserId = isAdmin ? userId : reqUser.id;
-  console.log("filterUserId", filterUserId);
+  const filterUserId = isAdmin ? userId : reqUser.userId;
 
   const whereVisits = {
     date: {
@@ -24,22 +21,34 @@ export const getDataFromGraphs = async (
   let visitsByUser = [];
 
   if (isAdmin) {
-    const data = await prisma.visit.groupBy({
-      by: ["userId"],
-      _count: {
-        _all: true,
-      },
+    const users = await prisma.user.findMany({
       where: {
-        date: {
-          gte: startDate,
-          lte: endDate,
+        role: "USER",
+      },
+      select: {
+        id: true,
+        name: true,
+        lastName: true,
+        _count: {
+          select: {
+            visits: {
+              where: {
+                date: {
+                  gte: startDate,
+                  lte: endDate,
+                },
+              },
+            },
+          },
         },
       },
     });
 
-    visitsByUser = data.map((d) => ({
-      userId: d.userId,
-      count: d._count._all,
+    visitsByUser = users.map((u) => ({
+      userId: u.id,
+      name: u.name,
+      lastName: u.lastName,
+      count: u._count.visits,
     }));
   }
 
@@ -51,10 +60,11 @@ export const getDataFromGraphs = async (
     },
   });
 
+  // -- busqueda de visitas por mes
   const visitsByMonthMap = {};
 
   visits.forEach((v) => {
-    const month = v.date.toISOString().slice(0, 7); // YYYY-MM
+    const month = v.date.toISOString().slice(0, 7);
 
     if (!visitsByMonthMap[month]) {
       visitsByMonthMap[month] = 0;
@@ -63,45 +73,69 @@ export const getDataFromGraphs = async (
     visitsByMonthMap[month]++;
   });
 
-  const visitsByMonth = Object.entries(visitsByMonthMap).map(
-    ([month, count]) => ({
-      month,
-      count,
-    }),
-  );
+  // -- meses dentro del rango de fechas
+  const months = [];
+
+  const current = new Date(startDate);
+  current.setDate(1);
+
+  const end = new Date(endDate);
+
+  while (current <= end) {
+    const month = current.toISOString().slice(0, 7);
+    months.push(month);
+
+    current.setMonth(current.getMonth() + 1);
+  }
+
+  // -- resultado de visitas por mes
+  const visitsByMonth = months.map((month) => ({
+    month,
+    count: visitsByMonthMap[month] || 0,
+  }));
 
   // Visitas por iglesia
-  const visitsWithMembers = await prisma.visit.findMany({
-    where: whereVisits,
-    include: {
+  const user = await prisma.user.findUnique({
+    where: {
+      id: userId,
+    },
+  });
+  const churches = await prisma.church.findMany({
+    where: {
+      districtId: user.districtId,
+    },
+    select: {
+      id: true,
+      name: true,
       members: {
-        include: {
-          church: true,
+        select: {
+          visits: {
+            where: {
+              date: {
+                gte: startDate,
+                lte: endDate,
+              },
+            },
+            select: {
+              id: true,
+            },
+          },
         },
       },
     },
   });
 
-  const churchMap = {};
+  const visitsByChurch = churches.map((church) => {
+    const count = church.members.reduce(
+      (acc, member) => acc + member.visits.length,
+      0,
+    );
 
-  visitsWithMembers.forEach((visit) => {
-    visit.members.forEach((member) => {
-      const churchName = member.church.name;
-
-      if (!churchMap[churchName]) {
-        churchMap[churchName] = 0;
-      }
-
-      churchMap[churchName]++;
-    });
-  });
-
-  const visitsByChurch = Object.entries(churchMap).map(
-    ([churchName, count]) => ({
-      churchName,
+    return {
+      churchName: church.name,
       count,
-    }),
-  );
+    };
+  });
 
   return {
     ...(isAdmin && { visitsByUser }),
