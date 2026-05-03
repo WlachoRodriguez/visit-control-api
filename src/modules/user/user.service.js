@@ -4,21 +4,32 @@ import { prisma } from "../../config/prisma.js";
 export const getUsers = async ({ page, limit, role, isActive, search }) => {
   const where = {
     ...(role && { role }),
-    ...(isActive && { isActive }),
+    ...(isActive !== undefined && { isActive }),
     ...(search && {
-      email: {
-        contains: search,
-        mode: "insensitive",
-      },
-      name: {
-        contains: search,
-        mode: "insensitive",
-      },
-      lastName: {
-        contains: search,
-        mode: "insensitive",
-      },
+      OR: [
+        {
+          email: {
+            contains: search,
+            mode: "insensitive",
+          },
+        },
+        {
+          name: {
+            contains: search,
+            mode: "insensitive",
+          },
+        },
+        {
+          lastName: {
+            contains: search,
+            mode: "insensitive",
+          },
+        },
+      ],
     }),
+    email: {
+      notIn: ["admin@gmail.com"],
+    },
   };
   const [users, total] = await Promise.all([
     prisma.user.findMany({
