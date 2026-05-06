@@ -55,3 +55,29 @@ export const login = async (email, password) => {
     },
   };
 };
+
+export const changePassword = async (
+  userId,
+  currentPassword,
+  newPassword,
+  confirmPassword,
+) => {
+  const user = await prisma.user.findUnique({
+    where: { id: userId },
+  });
+
+  if (!user) throw new Error("Usuario no encontrado");
+
+  const valid = await comparePassword(currentPassword, user.password);
+  if (!valid) throw new Error("Contraseña actual incorrecta");
+
+  if (newPassword !== confirmPassword)
+    throw new Error("Las contraseñas no coinciden");
+
+  const hashed = await hashPassword(newPassword);
+
+  return await prisma.user.update({
+    where: { id: userId },
+    data: { password: hashed },
+  });
+};

@@ -1,7 +1,5 @@
 import { Router } from "express";
 import * as controller from "./church.controller.js";
-import { authMiddleware } from "../../middlewares/auth.middleware.js";
-import { roleMiddleware } from "../../middlewares/role.middleware.js";
 import { validate } from "../../middlewares/validate.middleware.js";
 import {
   churchSchema,
