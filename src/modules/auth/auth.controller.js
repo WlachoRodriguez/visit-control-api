@@ -27,3 +27,17 @@ export const login = async (req, res, next) => {
     next(e);
   }
 };
+
+export const changePassword = async (req, res, next) => {
+  try {
+    const data = await authService.changePassword(
+      req.user.userId,
+      req.body.currentPassword,
+      req.body.newPassword,
+      req.body.confirmPassword,
+    );
+    res.json({ message: "Contraseña modificada exitosamente" });
+  } catch (e) {
+    next(e);
+  }
+};

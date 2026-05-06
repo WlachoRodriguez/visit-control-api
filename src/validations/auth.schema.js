@@ -15,3 +15,9 @@ export const loginSchema = z.object({
   email: z.string().email("Email inválido"),
   password: z.string().min(6, "Mínimo 6 caracteres"),
 });
+
+export const changePasswordSchema = z.object({
+  currentPassword: z.string().min(6, "Mínimo 6 caracteres"),
+  newPassword: z.string().min(6, "Mínimo 6 caracteres"),
+  confirmPassword: z.string().min(6, "Mínimo 6 caracteres"),
+});
